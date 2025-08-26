@@ -18,14 +18,20 @@ async function run() {
 	console.log(await sdk.read.speed())
 	console.log(`Battery: ${battery}`)
 	if (process.argv[3] == "s") {
-		sdk.receiver.video.bind()
+		// sdk.receiver.video.bind()
+		try {
+			bindVideo()
+		} catch (error) {
+			console.error('Error binding video:', error)
+		}
+		return
 		process.argv[3] = process.argv[4]
 	}
 	if (process.argv[3] && process.argv[3] !== "s") {
 		await sdk.set.speed(process.argv[3])
 	}
 	setTimeout(async function () {
-		doStuff()
+		// doStuff()
 	}, 100)
 }
 run()
@@ -33,41 +39,10 @@ run()
 async function doStuff() {
 	console.log(await sdk.read.speed())
 	await sdk.control.takeOff()
-	//sdk.control.rotate.clockwise(360)
-	// 28 forward, 13 sideways
-	mat(() => {
-		console.log("UP")
-		move("up", 30.48)
-		mat(() => {
-			// console.log("moving")
-			// moveS("front", 8)	
-			// mat(()=>{
-			// 	console.log("moving")
-			// 	moveS("right", 8)				
-			// 	mat(()=>{
-			// 		console.log("moving")
-			// 		moveS("front", 10)
-			// 		mat(()=>{
-			// 			console.log("moving")
-			// 			moveS("front", 8)
-			// 			mat(()=>{
-			// 				console.log("rotating -90")
-			// 				sdk.control.rotate.counterClockwise(180)
-			// 				mat(()=>{
-			// 					console.log("moving")
-			// 					moveS("right", 10)
 			mat(async () => {
 				console.log("landing")
 				await sdk.control.land()
 			})
-			// 					})
-			// 				})
-			// 			})
-			// 		})
-			// 	})
-		})
-
-	}, 7000)
 }
 
 function mat(input, settime) {
@@ -92,6 +67,16 @@ function moveS(where, dir) {
 	move(where, ndir)
 }
 async function move(where, dir) { console.log(await sdk.control.move[where](dir)) }
+
+const bindVideo = async () => {
+	const h264encoder_spawn = {
+					"command": 'ffplay',
+					"args": ['-']
+				}
+	const h264encoder = spawn(h264encoder_spawn.command, h264encoder_spawn.args)
+	const videoEmitter = await sdk.receiver.video.bind() 
+	videoEmitter.on('message', msg => h264encoder.stdin.write(msg))
+}
 
 /*
 //CONTROL COMMANDS
