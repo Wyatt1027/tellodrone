@@ -31,7 +31,7 @@ async function run() {
 		await sdk.set.speed(process.argv[3])
 	}
 	setTimeout(async function () {
-		// doStuff()
+		doStuff()
 	}, 100)
 }
 run()
@@ -41,7 +41,7 @@ async function doStuff() {
 	await sdk.control.takeOff()
 	mat(() => {
 		console.log("Forward")
-		moveS("front", 1.5)
+		moveS("front", 1)
 		mat(async () => {
 			console.log("landing")
 			await sdk.control.land()
