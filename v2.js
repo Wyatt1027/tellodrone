@@ -41,13 +41,13 @@ async function doStuff() {
 	await sdk.control.takeOff()
 	mat(() => {
 		console.log("Forward")
-		moveS("front", 1)
+		moveS("front", 5)
 		mat(() => {
 			console.log("UP A")
 			moveS("up", 1)
 			mat(() => {
 				console.log("Down A")
-				moveS("Down", 1)
+				moveS("down", 1)
 				mat(async () => {
 					console.log("landing")
 					await sdk.control.land()
