@@ -17,8 +17,8 @@ async function run() {
 	battery = await sdk.read.battery();
 	console.log(await sdk.read.speed())
 	console.log(`Battery: ${battery}`)
-	if(process.argv[3] == "s"){
-		sdk.receiver.video.bind()
+	if (process.argv[10] == "s") {
+		// sdk.receiver.video.bind()
 		try {
 			bindVideo()
 		} catch (error) {
@@ -27,11 +27,11 @@ async function run() {
 		return
 		process.argv[3] = process.argv[4]
 	}
-	if (process.argv[3] && process.argv[3] !== "s") {
-		await sdk.set.speed(process.argv[3])
+	if (process.argv[10] && process.argv[10] !== "s") {
+		await sdk.set.speed(process.argv[10])
 	}
 	setTimeout(async function () {
-		// doStuff()
+		doStuff()
 	}, 100)
 }
 run()
@@ -39,10 +39,22 @@ run()
 async function doStuff() {
 	console.log(await sdk.read.speed())
 	await sdk.control.takeOff()
-			mat(async () => {
-				console.log("landing")
-				await sdk.control.land()
+	mat(() => {
+		console.log("Forward")
+		moveS("front", 5)
+		mat(() => {
+			console.log("UP A")
+			moveS("up", 1)
+			mat(() => {
+				console.log("Down A")
+				moveS("down", 1)
+				mat(async () => {
+					console.log("landing")
+					await sdk.control.land()
+				})
 			})
+		})
+	})
 }
 
 function mat(input, settime) {
@@ -70,11 +82,11 @@ async function move(where, dir) { console.log(await sdk.control.move[where](dir)
 
 const bindVideo = async () => {
 	const h264encoder_spawn = {
-					"command": 'ffplay',
-					"args": ['-']
-				}
+		"command": 'ffplay',
+		"args": ['-']
+	}
 	const h264encoder = spawn(h264encoder_spawn.command, h264encoder_spawn.args)
-	const videoEmitter = await sdk.receiver.video.bind() 
+	const videoEmitter = await sdk.receiver.video.bind()
 	videoEmitter.on('message', msg => h264encoder.stdin.write(msg))
 }
 
