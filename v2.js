@@ -17,7 +17,7 @@ async function run() {
 	battery = await sdk.read.battery();
 	console.log(await sdk.read.speed())
 	console.log(`Battery: ${battery}`)
-	if (process.argv[3] == "s") {
+	if (process.argv[10] == "s") {
 		// sdk.receiver.video.bind()
 		try {
 			bindVideo()
@@ -27,8 +27,8 @@ async function run() {
 		return
 		process.argv[3] = process.argv[4]
 	}
-	if (process.argv[3] && process.argv[3] !== "s") {
-		await sdk.set.speed(process.argv[3])
+	if (process.argv[10] && process.argv[10] !== "s") {
+		await sdk.set.speed(process.argv[10])
 	}
 	setTimeout(async function () {
 		doStuff()
@@ -45,9 +45,13 @@ async function doStuff() {
 		mat(() => {
 			console.log("UP A")
 			moveS("up", 1)
-			mat(async () => {
-				console.log("landing")
-				await sdk.control.land()
+			mat(() => {
+				console.log("Down A")
+				moveS("Down", 1)
+				mat(async () => {
+					console.log("landing")
+					await sdk.control.land()
+				})
 			})
 		})
 	})
