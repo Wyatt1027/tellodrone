@@ -39,10 +39,14 @@ run()
 async function doStuff() {
 	console.log(await sdk.read.speed())
 	await sdk.control.takeOff()
-			mat(async () => {
-				console.log("landing")
-				await sdk.control.land()
-			})
+	mat(() => {
+		console.log("Forward")
+		moveS("front", 1.5)
+		mat(async () => {
+			console.log("landing")
+			await sdk.control.land()
+		})
+	})
 }
 
 function mat(input, settime) {
@@ -70,11 +74,11 @@ async function move(where, dir) { console.log(await sdk.control.move[where](dir)
 
 const bindVideo = async () => {
 	const h264encoder_spawn = {
-					"command": 'ffplay',
-					"args": ['-']
-				}
+		"command": 'ffplay',
+		"args": ['-']
+	}
 	const h264encoder = spawn(h264encoder_spawn.command, h264encoder_spawn.args)
-	const videoEmitter = await sdk.receiver.video.bind() 
+	const videoEmitter = await sdk.receiver.video.bind()
 	videoEmitter.on('message', msg => h264encoder.stdin.write(msg))
 }
 
