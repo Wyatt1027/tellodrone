@@ -42,9 +42,13 @@ async function doStuff() {
 	mat(() => {
 		console.log("Forward")
 		moveS("front", 1)
-		mat(async () => {
-			console.log("landing")
-			await sdk.control.land()
+		mat(() => {
+			console.log("UP A")
+			moveS("up", 1)
+			mat(async () => {
+				console.log("landing")
+				await sdk.control.land()
+			})
 		})
 	})
 }
