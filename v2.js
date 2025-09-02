@@ -17,8 +17,8 @@ async function run() {
 	battery = await sdk.read.battery();
 	console.log(await sdk.read.speed())
 	console.log(`Battery: ${battery}`)
-	if (process.argv[3] == "s") {
-		// sdk.receiver.video.bind()
+	if(process.argv[3] == "s"){
+		sdk.receiver.video.bind()
 		try {
 			bindVideo()
 		} catch (error) {
